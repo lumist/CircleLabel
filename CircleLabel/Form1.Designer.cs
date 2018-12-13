@@ -31,6 +31,7 @@ namespace CircleLabel
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.Tool = new System.Windows.Forms.Panel();
             this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
@@ -40,16 +41,20 @@ namespace CircleLabel
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.Cell = new System.Windows.Forms.Panel();
+            this.Command = new System.Windows.Forms.PictureBox();
             this.Scopebox = new System.Windows.Forms.PictureBox();
             this.CellW = new System.Windows.Forms.PictureBox();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.Command = new System.Windows.Forms.PictureBox();
             this.Tool.SuspendLayout();
             this.Cell.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Command)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Scopebox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CellW)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Command)).BeginInit();
             this.SuspendLayout();
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 33;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Tool
             // 
@@ -142,17 +147,30 @@ namespace CircleLabel
             // Cell
             // 
             this.Cell.AllowDrop = true;
+            this.Cell.BackColor = System.Drawing.SystemColors.Control;
             this.Cell.BackgroundImage = global::CircleLabel.Properties.Resources.bk;
             this.Cell.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.Cell.Controls.Add(this.Command);
             this.Cell.Controls.Add(this.Scopebox);
             this.Cell.Controls.Add(this.CellW);
             this.Cell.Location = new System.Drawing.Point(1, 1);
+            this.Cell.Margin = new System.Windows.Forms.Padding(0);
             this.Cell.Name = "Cell";
             this.Cell.Size = new System.Drawing.Size(180, 180);
             this.Cell.TabIndex = 0;
             this.Cell.DragDrop += new System.Windows.Forms.DragEventHandler(this.Cell_DragDrop);
             this.Cell.DragOver += new System.Windows.Forms.DragEventHandler(this.Cell_DragOver);
+            // 
+            // Command
+            // 
+            this.Command.BackgroundImage = global::CircleLabel.Properties.Resources.hotkey;
+            this.Command.Enabled = false;
+            this.Command.Location = new System.Drawing.Point(43, 77);
+            this.Command.Name = "Command";
+            this.Command.Size = new System.Drawing.Size(100, 90);
+            this.Command.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.Command.TabIndex = 2;
+            this.Command.TabStop = false;
             // 
             // Scopebox
             // 
@@ -166,7 +184,9 @@ namespace CircleLabel
             // 
             // CellW
             // 
-            this.CellW.Location = new System.Drawing.Point(2, 2);
+            this.CellW.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.CellW.Location = new System.Drawing.Point(3, 3);
+            this.CellW.Margin = new System.Windows.Forms.Padding(0);
             this.CellW.Name = "CellW";
             this.CellW.Size = new System.Drawing.Size(176, 176);
             this.CellW.TabIndex = 0;
@@ -174,27 +194,11 @@ namespace CircleLabel
             this.CellW.Paint += new System.Windows.Forms.PaintEventHandler(this.CellW_Paint);
             this.CellW.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CellW_MouseDown);
             // 
-            // timer1
-            // 
-            this.timer1.Interval = 33;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // Command
-            // 
-            this.Command.BackgroundImage = global::CircleLabel.Properties.Resources.hotkey;
-            this.Command.Enabled = false;
-            this.Command.Location = new System.Drawing.Point(43, 77);
-            this.Command.Name = "Command";
-            this.Command.Size = new System.Drawing.Size(100, 90);
-            this.Command.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.Command.TabIndex = 2;
-            this.Command.TabStop = false;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(183, 216);
+            this.ClientSize = new System.Drawing.Size(184, 216);
             this.Controls.Add(this.Tool);
             this.Controls.Add(this.Cell);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -206,9 +210,9 @@ namespace CircleLabel
             this.Move += new System.EventHandler(this.Form1_Move);
             this.Tool.ResumeLayout(false);
             this.Cell.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Command)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Scopebox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CellW)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Command)).EndInit();
             this.ResumeLayout(false);
 
         }

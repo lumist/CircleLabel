@@ -88,26 +88,56 @@ namespace CircleLabel
                                 ;
                             }
                         }
-                        Circle_Cursor = 0;
-                        Edge_Cursor = 0;
-                        this.Cell.BackgroundImage = Image.FromFile(file[i]);
-                        this.CellW.BackgroundImage = Image.FromFile(file[i]);
-                        Originalimg = new Bitmap(this.Cell.BackgroundImage);
-                        OriImg = new int[Originalimg.Height, Originalimg.Width];
-                        for (int it1 = 0; it1 < Originalimg.Height; it1++)
+                        // 裁剪图像
+                        Originalimg = new Bitmap(Image.FromFile(file[i]));
+                        int OriWidth = Originalimg.Width;
+                        int OriHeight = Originalimg.Height - 59;
+                        OriImg = new int[OriHeight, OriWidth];
+                        for (int it1 = 0; it1 < OriHeight; it1++)
                         {
-                            for (int it2 = 0; it2 < Originalimg.Width; it2++)
+                            for (int it2 = 0; it2 < OriWidth; it2++)
                             {
                                 OriImg[it1, it2] = Originalimg.GetPixel(it2, it1).B;
                             }
                         }
-                        this.Width = Cell_Init[3] - Cell_Init[1] + this.Cell.BackgroundImage.Width + 4;
-                        this.Height = Cell_Init[2] - Cell_Init[0] + this.Cell.BackgroundImage.Height - 59 + 4;
-                        this.Cell.Width = this.Cell.BackgroundImage.Width + 4;
-                        this.Cell.Height = this.Cell.BackgroundImage.Height - 59 + 4;
-                        this.CellW.Width = this.Cell.BackgroundImage.Width;
-                        this.CellW.Height = this.Cell.BackgroundImage.Height - 59;
-                        this.Tool.Location = new System.Drawing.Point(this.Cell.Location.X + this.Cell.BackgroundImage.Width - this.Tool.Width, this.Cell.Location.Y + this.Cell.BackgroundImage.Height - 59);
+                        Originalimg = new Bitmap(OriWidth, OriHeight);
+                        for (int it1 = 0; it1 < OriHeight; it1++)
+                        {
+                            for (int it2 = 0; it2 < OriWidth; it2++)
+                            {
+                                Originalimg.SetPixel(it2, it1,Color.FromArgb(OriImg[it1, it2] , OriImg[it1, it2] , OriImg[it1, it2] ));
+                            }
+                        }
+
+                        Circle_Cursor = 0;
+                        Edge_Cursor = 0;
+                        /*
+                         *  * ** ******* ** *
+                         *  * C* ******* ** *
+                         *  * ** ******* ** *
+                         *  * ** Wx...xW ** *
+                         *  * ** xx...xx ** *
+                         *  . .. ....... .. .
+                         *  . .. ....... .. .
+                         *  . .. ....... .. .
+                         *  * ** xx...xx ** *
+                         *  * ** Wx...xW ** *
+                         *  * ** ******* ** *
+                         *  * ** ******* ** *
+                         *  * ** ******* ** *
+                         *  (4,4) is upperleft point location
+                         */
+                        this.Width = Cell_Init[3] - Cell_Init[1] + OriWidth + 2;
+                        this.Height = Cell_Init[2] - Cell_Init[0] + OriHeight;//- 59
+                        this.Cell.Width = OriWidth + 4;
+                        this.Cell.Height = OriHeight + 4;
+                        //this.Cell.Width = this.Cell.BackgroundImage.Width + 4;
+                        //this.Cell.Height = (this.Cell.BackgroundImage.Height - 59) + 4;//- 59
+                        this.CellW.Location  = new Point(2,2);
+                        this.CellW.Width = OriWidth;
+                        this.CellW.Height = OriHeight;//- 59
+                        this.CellW.BackgroundImage = Originalimg;
+                        this.Tool.Location = new System.Drawing.Point(this.Cell.Location.X + this.Cell.Width - 1 - this.Tool.Width, this.Cell.Location.Y + this.Cell.Height);//
                         this.Location = new System.Drawing.Point((Screen.GetWorkingArea(this).Width - this.Width) / 2, (Screen.GetWorkingArea(this).Height - this.Height) / 2);
                         if_open = true;
                         break;
