@@ -20,6 +20,10 @@ namespace CircleLabel
 
         [DllImport("user32.dll")]
         private static extern int SetCursorPos(int x, int y);
+        [DllImport("user32.dll")]
+        private static extern int mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
+        const int MOUSEEVENTF_LEFTDOWN = 0x0002; 
+        const int MOUSEEVENTF_LEFTUP = 0x0004; 
         public Form1()
         {
             InitializeComponent();
@@ -281,10 +285,16 @@ namespace CircleLabel
         private void GetCircle(int[] x, int[] y, out int centerx, out int centery, out double radius)
         {
             centerx = (x[1] * x[1] + y[1] * y[1]) * (y[2] - y[3]) + (x[2] * x[2] + y[2] * y[2]) * (y[3] - y[1]) + (x[3] * x[3] + y[3] * y[3]) * (y[1] - y[2]);
-            centerx /= (2 * (x[1] * (y[2] - y[3]) - y[1] * (x[2] - x[3]) + x[2] * y[3] - x[3] * y[2]));
-
             centery = (x[1] * x[1] + y[1] * y[1]) * (x[3] - x[2]) + (x[2] * x[2] + y[2] * y[2]) * (x[1] - x[3]) + (x[3] * x[3] + y[3] * y[3]) * (x[2] - x[1]);
-            centery /= (2 * (x[1] * (y[2] - y[3]) - y[1] * (x[2] - x[3]) + x[2] * y[3] - x[3] * y[2]));
+            try
+            {
+                centerx /= (2 * (x[1] * (y[2] - y[3]) - y[1] * (x[2] - x[3]) + x[2] * y[3] - x[3] * y[2]));
+                centery /= (2 * (x[1] * (y[2] - y[3]) - y[1] * (x[2] - x[3]) + x[2] * y[3] - x[3] * y[2]));
+            }
+            catch
+            {
+                centerx = centery = 0;
+            }
 
             radius = Math.Sqrt((centerx - x[1]) * (centerx - x[1]) + (centery - y[1]) * (centery - y[1]));
         }
@@ -472,6 +482,11 @@ namespace CircleLabel
                     SetCursorPos(Cursor.Position.X-(X-rX), Cursor.Position.Y-(Y-rY));
                 }
             }
+            else if (e.KeyCode == Keys.X)
+            {
+                e.Handled = true;
+                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+            }
             else if (e.KeyCode == Keys.F1)
             {
                 Command.Enabled = true;
@@ -635,7 +650,11 @@ namespace CircleLabel
                 {
                     nc = bt.GetPixel(i, j);
                     //img[i, j] = (int)(0.3 * nc.R + 0.59 * nc.G + 0.11 * nc.B);
-                    img[i, j] = nc.B; //本身就是灰度图
+                    int ave = (nc.B + nc.G + nc.R) / 3;
+                    if ((ave - nc.B) * (ave - nc.B) + (ave - nc.R) * (ave - nc.R) + (ave - nc.G) * (ave - nc.G) < 10)
+                        img[i, j] = nc.B; //本身就是灰度图
+                    else
+                        img[i, j] = 0;
                 }
             }
             for (int i = 1; i < bt.Height - 1; i++)
